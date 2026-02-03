@@ -1,0 +1,1 @@
+export { StylesPanel } from './StylesPanel';
