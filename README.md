@@ -2,8 +2,6 @@
 
 Interactive editor for a Tagline element in a no-code website builder.
 
-📖 **[Детальна документація українською](./docs/PROJECT_OVERVIEW_UA.md)**
-
 ## Features
 
 - **Preview Area** — Real-time preview of tagline with styled tags
