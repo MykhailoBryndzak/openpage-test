@@ -2,6 +2,8 @@
 
 Interactive editor for a Tagline element in a no-code website builder.
 
+🚀 **[Live Demo](https://openpage-test.vercel.app/)**
+
 ## Features
 
 - **Preview Area** — Real-time preview of tagline with styled tags
