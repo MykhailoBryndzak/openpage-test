@@ -1,24 +1,23 @@
 import { css } from 'styled-components';
-import { createStyleStrategy } from '@utils/styleStrategy';
 import type { TagStyle, TagSize } from '../types';
 
 export const tagStyleVariants: Record<TagStyle, ReturnType<typeof css>> = {
   default: css`
-    background-color: var(--bg-input);
-    border: 1px solid var(--border-color);
+    background-color: var(--default-bg);
+    border: 1px solid var(--default-bg);
     color: var(--text-primary);
 
     &:hover {
-      border-color: var(--text-secondary);
+      border-color: rgba(255, 255, 255, 0.2);
     }
   `,
   outline: css`
-    background-color: #157bda33;
+    background-color: var(--tag-outline);
     border: 1px solid transparent;
     color: var(--accent-blue);
 
     &:hover {
-      background-color: #157bda55;
+      background-color: var(--tag-outline);
     }
   `,
   filled: css`
@@ -31,8 +30,8 @@ export const tagStyleVariants: Record<TagStyle, ReturnType<typeof css>> = {
     }
   `,
   ghost: css`
-    background-color: var(--bg-input);
-    border: 1px solid transparent;
+    background-color: transparent;
+    border: 1px solid var(--tag-border);
     color: var(--text-secondary);
 
     &:hover {
@@ -43,26 +42,23 @@ export const tagStyleVariants: Record<TagStyle, ReturnType<typeof css>> = {
 
 export const tagSizeVariants: Record<TagSize, ReturnType<typeof css>> = {
   XL: css`
-    padding: 10px 20px;
-    font-size: 18px;
+    padding: 12px 28px;
+    font-size: 20px;
   `,
   L: css`
-    padding: 8px 16px;
-    font-size: 16px;
+    padding: 10px 24px;
+    font-size: 18px;
   `,
   M: css`
-    padding: 6px 12px;
-    font-size: 14px;
+    padding: 8px 20px;
+    font-size: 16px;
   `,
   S: css`
-    padding: 4px 10px;
-    font-size: 12px;
+    padding: 6px 16px;
+    font-size: 14px;
   `,
   XS: css`
-    padding: 2px 8px;
+    padding: 4px 12px;
     font-size: 12px;
   `,
 };
-
-export const tagStyleStrategy = createStyleStrategy(tagStyleVariants);
-export const tagSizeStrategy = createStyleStrategy(tagSizeVariants);

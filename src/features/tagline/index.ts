@@ -1,12 +1,14 @@
 export { TaglineStore } from './stores/TaglineStore';
+export { taglineApi, SAVE_ERROR_MESSAGES } from './api/taglineApi';
+export type { SaveErrorCode } from './api/taglineApi';
 
 export {
   TaglinePreview,
   MainPanel,
   ItemPanel,
   StylesPanel,
-  PanelContainer,
 } from './components';
+export { registerTaglineElement } from './register';
 
 export type {
   TagItem,
@@ -26,4 +28,4 @@ export {
   DEFAULT_TAGLINE_STYLES,
 } from './types';
 
-export { tagStyleVariants, tagSizeVariants, tagStyleStrategy, tagSizeStrategy } from './styles/TagStyleStrategy';
+export { tagStyleVariants, tagSizeVariants } from './styles/TagStyleStrategy';

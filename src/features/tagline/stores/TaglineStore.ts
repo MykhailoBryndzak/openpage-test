@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import type { TagItem, TaglineStyles, TaglineData } from '../types';
 import { DEFAULT_TAGLINE_STYLES } from '../types';
 import type { ElementStore } from '@app/types/base';
-import { taglineApi } from '../api/taglineApi';
+import type { TaglinePersistence } from '../api/taglineApi';
+import type { SaveErrorCode } from '../api/taglineApi';
 import { debounce } from '@utils/debounce';
 
 const DEFAULT_ITEMS: TagItem[] = [
@@ -17,20 +18,43 @@ const DEFAULT_ITEMS: TagItem[] = [
 export class TaglineStore implements ElementStore<TagItem, TaglineStyles> {
   items: TagItem[] = DEFAULT_ITEMS;
   styles: TaglineStyles = { ...DEFAULT_TAGLINE_STYLES };
-  private debouncedSave = debounce(() => {
-    taglineApi.save(this.data);
-  }, 300);
+  saveError: SaveErrorCode | null = null;
+  private persistence: TaglinePersistence;
+  private debouncedSave: ReturnType<typeof debounce>;
 
-  constructor() {
+  constructor(persistence: TaglinePersistence) {
+    this.persistence = persistence;
+    this.debouncedSave = debounce(() => {
+      try {
+        this.persistence.save(this.data);
+        runInAction(() => {
+          this.saveError = null;
+        });
+      } catch (err) {
+        runInAction(() => {
+          this.saveError = (err as { code?: SaveErrorCode }).code ?? 'unknown';
+        });
+      }
+    }, 300);
     makeAutoObservable(this);
-    
-    // Automatically save whenever data changes
+    this.hydrate();
+
+    // Automatically save whenever data changes.
+    // JSON.stringify forces a deep read so MobX tracks nested mutations (e.g. updateItem).
     reaction(
-      () => this.data,
+      () => JSON.stringify(this.data),
       () => {
         this.debouncedSave();
       }
     );
+  }
+
+  private hydrate(): void {
+    const saved = this.persistence.fetch();
+    if (saved) {
+      this.items = saved.items;
+      this.styles = { ...DEFAULT_TAGLINE_STYLES, ...saved.styles };
+    }
   }
 
   addItem(label: string, link: string): string {

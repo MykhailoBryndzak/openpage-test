@@ -1,2 +1,2 @@
 export { TaglinePreview } from './Preview';
-export { MainPanel, ItemPanel, StylesPanel, PanelContainer } from './Panels';
+export { MainPanel, ItemPanel, StylesPanel } from './Panels';

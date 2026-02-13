@@ -1,6 +1,8 @@
+import type { TaglineStore } from '../../../stores/TaglineStore';
 import { observer } from 'mobx-react-lite';
-import { useTaglineStore, usePanelStore } from '@stores';
-import { PanelHeader, PlusIcon, ChevronRightIcon, TagIcon } from '@components';
+import { usePanelStore } from '@stores';
+import { SAVE_ERROR_MESSAGES } from '../../../api/taglineApi';
+import { PanelHeader, PlusIcon, ChevronRightIcon, StyleIcon } from '@components';
 import {
   DndContext,
   closestCenter,
@@ -18,8 +20,9 @@ import {
 import * as S from './MainPanel.styles';
 import { SortableTagItem } from './SortableTagItem';
 
-export const MainPanel = observer(function MainPanel() {
-  const taglineStore = useTaglineStore();
+type MainPanelProps = { store: TaglineStore };
+
+export const MainPanel = observer(function MainPanel({ store: taglineStore }: MainPanelProps) {
   const panelStore = usePanelStore();
 
   const sensors = useSensors(
@@ -31,41 +34,53 @@ export const MainPanel = observer(function MainPanel() {
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-
     if (over && active.id !== over.id) {
       const oldIndex = taglineStore.items.findIndex((i) => i.id === active.id);
       const newIndex = taglineStore.items.findIndex((i) => i.id === over.id);
-
       taglineStore.reorderItems(oldIndex, newIndex);
     }
   }
 
+  const hasItems = taglineStore.items.length > 0;
+
   return (
     <S.Container role="region" aria-label="Tagline settings">
-      <PanelHeader title="Tagline" onClose={() => panelStore.close()} />
+      <PanelHeader title="Tagline" onClose={() => panelStore.requestClose()} />
+
+      {taglineStore.saveError && (
+        <S.SaveErrorBanner role="alert">
+          {SAVE_ERROR_MESSAGES[taglineStore.saveError]}
+        </S.SaveErrorBanner>
+      )}
 
       <S.Content>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={taglineStore.items.map((i) => i.id)}
-            strategy={verticalListSortingStrategy}
+        {hasItems ? (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
           >
-            <S.TagList aria-label="Tag items">
-              {taglineStore.items.map((item) => (
-                <SortableTagItem
-                  key={item.id}
-                  item={item}
-                  onEdit={() => panelStore.openItemPanel(item.id)}
-                  onRemove={() => taglineStore.removeItem(item.id)}
-                />
-              ))}
-            </S.TagList>
-          </SortableContext>
-        </DndContext>
+            <SortableContext
+              items={taglineStore.items.map((i) => i.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <S.TagList aria-label="Tag items">
+                {taglineStore.items.map((item) => (
+                  <SortableTagItem
+                    key={item.id}
+                    item={item}
+                    onEdit={() => panelStore.openItemPanel(item.id)}
+                    onRemove={() => taglineStore.removeItem(item.id)}
+                  />
+                ))}
+              </S.TagList>
+            </SortableContext>
+          </DndContext>
+        ) : (
+          <S.EmptyState>
+            <span>No tags yet</span>
+          </S.EmptyState>
+        )}
 
         <S.AddButton
           onClick={() => panelStore.openItemPanel()}
@@ -84,7 +99,7 @@ export const MainPanel = observer(function MainPanel() {
           type="button"
         >
           <S.StylesButtonLeft>
-            <TagIcon />
+            <StyleIcon />
             <span>Styles</span>
           </S.StylesButtonLeft>
           <ChevronRightIcon />

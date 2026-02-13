@@ -21,17 +21,20 @@ export const PanelHeader = memo(function PanelHeader({ title, onBack, onClose }:
             <ChevronLeftIcon />
           </S.IconButton>
         )}
-        <S.Title>{title}</S.Title>
       </S.LeftSection>
-      {onClose && (
+      <S.CenterSection>
+        <S.Title>{title}</S.Title>
+      </S.CenterSection>
+      <S.RightSection>
         <S.IconButton
           onClick={onClose}
           aria-label="Close panel"
           type="button"
+          disabled={!onClose}
         >
           <XIcon />
         </S.IconButton>
-      )}
+      </S.RightSection>
     </S.Header>
   );
 });

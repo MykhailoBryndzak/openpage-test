@@ -1,11 +1,13 @@
 export {
   ChevronLeftIcon,
+  ChevronRightIcon,
   XIcon,
   PlusIcon,
-  ChevronRightIcon,
-  TagIcon,
+  StyleIcon,
+  GearIcon,
   GripVerticalIcon,
   AlignLeftIcon,
   AlignCenterIcon,
   AlignRightIcon,
+  CheckIcon,
 } from './Icons';

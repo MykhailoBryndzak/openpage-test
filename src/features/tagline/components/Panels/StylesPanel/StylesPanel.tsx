@@ -1,13 +1,15 @@
 import type { ReactNode } from 'react';
+import type { TaglineStore } from '../../../stores/TaglineStore';
 import { observer } from 'mobx-react-lite';
-import { useTaglineStore, usePanelStore } from '@stores';
+import { usePanelStore } from '@stores';
 import { PanelHeader, ButtonGroup, AlignLeftIcon, AlignCenterIcon, AlignRightIcon } from '@components';
 import { TAG_STYLES, TAG_SIZES, TAG_RADII } from '../../../types';
 import type { TagStyle, TagSize, TagRadius, TagAlignment } from '../../../types';
 import * as S from './StylesPanel.styles';
 
-export const StylesPanel = observer(function StylesPanel() {
-  const taglineStore = useTaglineStore();
+type StylesPanelProps = { store: TaglineStore };
+
+export const StylesPanel = observer(function StylesPanel({ store: taglineStore }: StylesPanelProps) {
   const panelStore = usePanelStore();
 
   const alignmentOptions: Array<{ value: TagAlignment; label: ReactNode }> = [
@@ -18,7 +20,11 @@ export const StylesPanel = observer(function StylesPanel() {
 
   return (
     <S.Container role="form" aria-label="Tag styles settings">
-      <PanelHeader title="Styles" onBack={() => panelStore.pop()} />
+      <PanelHeader
+        title="Styles"
+        onBack={() => panelStore.pop()}
+        onClose={() => panelStore.requestClose()}
+      />
 
       <S.Content>
         <S.Section>
@@ -42,44 +48,25 @@ export const StylesPanel = observer(function StylesPanel() {
 
         <S.Section>
           <S.SectionLabel>Size</S.SectionLabel>
-          <S.SizeButtonsContainer role="radiogroup" aria-label="Tag size">
-            {TAG_SIZES.map((size: TagSize) => (
-              <S.SizeButton
-                key={size}
-                $sizeValue={size}
-                $active={taglineStore.styles.size === size}
-                onClick={() => taglineStore.updateStyles({ size })}
-                aria-pressed={taglineStore.styles.size === size}
-                aria-label={`Size ${size}`}
-                type="button"
-              >
-                {size}
-              </S.SizeButton>
-            ))}
-          </S.SizeButtonsContainer>
+          <ButtonGroup
+            options={TAG_SIZES.map((s) => ({ value: s, label: s }))}
+            value={taglineStore.styles.size}
+            onChange={(size) => taglineStore.updateStyles({ size: size as TagSize })}
+            ariaLabel="Tag size"
+          />
         </S.Section>
 
         <S.Section>
           <S.SectionLabel>Radius</S.SectionLabel>
-          <S.RadiusButtonsContainer role="radiogroup" aria-label="Corner radius">
-            {TAG_RADII.map((radius: TagRadius) => (
-              <S.RadiusButton
-                key={radius}
-                $radius={radius}
-                $active={taglineStore.styles.radius === radius}
-                onClick={() => taglineStore.updateStyles({ radius })}
-                aria-pressed={taglineStore.styles.radius === radius}
-                aria-label={`Radius ${radius === 100 ? 'full' : radius + 'px'}`}
-                type="button"
-              >
-                {radius === 100 ? '∞' : radius}
-              </S.RadiusButton>
-            ))}
-          </S.RadiusButtonsContainer>
+          <ButtonGroup
+            options={TAG_RADII.map((r) => ({ value: r, label: r === 100 ? '100' : String(r) }))}
+            value={taglineStore.styles.radius}
+            onChange={(radius) => taglineStore.updateStyles({ radius: radius as TagRadius })}
+            ariaLabel="Corner radius"
+          />
         </S.Section>
 
         <S.Section>
-          <S.SectionLabel>Alignment</S.SectionLabel>
           <ButtonGroup
             options={alignmentOptions}
             value={taglineStore.styles.alignment}

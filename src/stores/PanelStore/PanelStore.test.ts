@@ -57,21 +57,37 @@ describe('PanelStore', () => {
     });
   });
 
+  describe('requestClose()', () => {
+    it('sets isClosing to true', () => {
+      store.open();
+      store.requestClose();
+
+      expect(store.isClosing).toBe(true);
+      expect(store.isOpen).toBe(true);
+    });
+  });
+
   describe('close()', () => {
-    it('sets isOpen to false', () => {
+    it('sets isOpen and isClosing to false', () => {
+      store.open();
+      store.requestClose();
       store.close();
 
       expect(store.isOpen).toBe(false);
+      expect(store.isClosing).toBe(false);
     });
   });
 
   describe('open()', () => {
     it('sets isOpen to true and resets stack', () => {
+      store.open();
       store.push('styles');
+      store.requestClose();
       store.close();
       store.open();
 
       expect(store.isOpen).toBe(true);
+      expect(store.isClosing).toBe(false);
       expect(store.stack.length).toBe(1);
     });
   });

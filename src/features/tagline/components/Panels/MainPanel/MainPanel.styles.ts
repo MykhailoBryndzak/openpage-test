@@ -1,21 +1,28 @@
 import styled from 'styled-components';
+import { focusRing, resetButton, hoverHighlight } from '@styles/mixins';
+import { PanelContainer } from '../shared/PanelLayout.styles';
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+export const Container = PanelContainer;
+
+export const SaveErrorBanner = styled.div`
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #fbbf24;
+  background-color: rgba(251, 191, 36, 0.15);
+  border-bottom: 1px solid rgba(251, 191, 36, 0.3);
 `;
 
 export const Content = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  padding: 13px 14px 14px 14px;
+  border-bottom: 1px solid var(--border-panel);
 `;
 
 export const TagList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -25,9 +32,16 @@ export const TagItem = styled.li`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  background-color: var(--bg-input);
+  height: 48px;
+  padding-left: 13px;
+  padding-right: 4px;
+  background: transparent;
   border-radius: 6px;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background-color: var(--bg-input);
+  }
 
   &:hover .removeButton {
     opacity: 1;
@@ -35,124 +49,123 @@ export const TagItem = styled.li`
 `;
 
 export const DragHandle = styled.button`
+  ${resetButton}
   cursor: grab;
   color: var(--text-secondary);
-  background: transparent;
-  border: none;
-  padding: 0;
   display: flex;
+  align-items: center;
   touch-action: none;
+  flex-shrink: 0;
 
   &:hover {
     color: var(--text-primary);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--accent-blue);
-    outline-offset: 2px;
-  }
+  ${focusRing}
 `;
 
 export const TagLabel = styled.button`
+  ${resetButton}
   flex: 1;
   text-align: left;
   font-size: 14px;
+  font-weight: 500;
+  line-height: 140%;
+  letter-spacing: -0.2%;
   color: var(--text-primary);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   transition: color 0.2s;
 
-  &:hover {
-    color: var(--accent-blue);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--accent-blue);
-    outline-offset: 2px;
-  }
+  ${focusRing}
 `;
 
 export const RemoveButton = styled.button`
-  padding: 4px;
+  ${resetButton}
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
   color: var(--text-secondary);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
+  border-radius: 6px;
+  transition: all 0.15s;
+  flex-shrink: 0;
 
   &:hover {
     color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
   }
 
   &:focus {
     opacity: 1;
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--accent-blue);
-    outline-offset: 2px;
-    opacity: 1;
-  }
+  ${focusRing}
 `;
 
 export const AddButton = styled.button`
+  ${resetButton}
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
-  margin-top: 12px;
-  padding: 8px 12px;
+  height: 48px;
+  margin-top: 4px;
+  padding-left: 13px;
   font-size: 14px;
+  font-weight: 400;
+  line-height: 140%;
+  letter-spacing: -0.44%;
   color: var(--text-secondary);
-  background: transparent;
-  border: none;
   border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
 
-  &:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-input);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--accent-blue);
-    outline-offset: 2px;
-  }
+  ${hoverHighlight}
+  ${focusRing}
 `;
 
 export const Footer = styled.footer`
-  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
 `;
 
 export const StylesButton = styled.button`
+  ${resetButton}
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 12px 16px;
+  height: 48px;
+  padding: 5px 14px;
   font-size: 14px;
+  font-weight: 500;
   color: var(--text-primary);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  border-radius: 0 0 4px 4px;
+  transition: background-color 0.15s;
 
   &:hover {
-    background-color: var(--bg-hover);
+    background-color: var(--bg-input);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--accent-blue);
-    outline-offset: -2px;
-  }
+  ${focusRing}
 `;
 
 export const StylesButtonLeft = styled.div`
   display: flex;
   align-items: center;
+  gap: 8px;
+`;
+
+export const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-align: center;
   gap: 8px;
 `;

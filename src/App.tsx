@@ -1,24 +1,31 @@
 import { lazy, Suspense } from 'react';
 import { StoreContext, rootStore } from '@stores';
+import { registerTaglineElement } from '@features/tagline/register';
 import * as S from './App.styles';
 
-// Lazy load feature components for code splitting
-const TaglinePreview = lazy(() => import('@features/tagline').then(module => ({ default: module.TaglinePreview })));
-const PanelContainer = lazy(() => import('@features/tagline').then(module => ({ default: module.PanelContainer })));
+registerTaglineElement();
+
+const taglineModule = () => import('@features/tagline');
+const TaglinePreview = lazy(() => taglineModule().then(module => ({ default: module.TaglinePreview })));
+const PanelContainer = lazy(() => import('@components/PanelContainer').then(m => ({ default: m.PanelContainer })));
+
+function AppContent() {
+  return (
+    <S.Container>
+      <Suspense fallback={null}>
+        <TaglinePreview />
+      </Suspense>
+      <Suspense fallback={null}>
+        <PanelContainer />
+      </Suspense>
+    </S.Container>
+  );
+}
 
 function App() {
   return (
     <StoreContext.Provider value={rootStore}>
-      <S.Container>
-        <S.Layout>
-          <Suspense fallback={<div>Loading...</div>}>
-            <TaglinePreview />
-          </Suspense>
-          <Suspense fallback={<div>Loading panels...</div>}>
-            <PanelContainer />
-          </Suspense>
-        </S.Layout>
-      </S.Container>
+      <AppContent />
     </StoreContext.Provider>
   );
 }

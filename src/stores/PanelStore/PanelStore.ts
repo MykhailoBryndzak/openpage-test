@@ -9,7 +9,8 @@ export type PanelState = {
 
 export class PanelStore {
   stack: PanelState[] = [{ type: 'main' }];
-  isOpen: boolean = true;
+  isOpen: boolean = false;
+  isClosing: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -45,12 +46,20 @@ export class PanelStore {
     this.push('styles');
   }
 
+  /** Initiates close with animation. PanelContainer calls close() when animation completes. */
+  requestClose(): void {
+    this.isClosing = true;
+  }
+
+  /** Called after close animation completes. */
   close(): void {
     this.isOpen = false;
+    this.isClosing = false;
   }
 
   open(): void {
     this.isOpen = true;
+    this.isClosing = false;
     this.reset();
   }
 }

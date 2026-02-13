@@ -1,14 +1,34 @@
 import { createContext, useContext } from 'react';
-import { TaglineStore } from '@features/tagline';
+import type { ElementType } from '@core';
+import { TaglineStore } from '@features/tagline/stores/TaglineStore';
+import { taglineApi } from '@features/tagline/api/taglineApi';
 import { PanelStore } from '@stores/PanelStore';
+import type { BaseElementItem, BaseElementStyles, ElementStore } from '@app/types/base';
 
 export class RootStore {
-  taglineStore: TaglineStore;
+  elementStores: Map<ElementType, ElementStore<BaseElementItem, BaseElementStyles>>;
+  activeElementType: ElementType | null = null;
   panelStore: PanelStore;
 
   constructor() {
-    this.taglineStore = new TaglineStore();
+    this.elementStores = new Map();
+    this.elementStores.set('tagline', new TaglineStore(taglineApi) as ElementStore<BaseElementItem, BaseElementStyles>);
     this.panelStore = new PanelStore();
+  }
+
+  openPanel(elementType: ElementType): void {
+    this.activeElementType = elementType;
+    this.panelStore.open();
+  }
+
+  closePanel(): void {
+    this.activeElementType = null;
+    this.panelStore.close();
+  }
+
+  getActiveElementStore<T>(): T | undefined {
+    if (!this.activeElementType) return undefined;
+    return this.elementStores.get(this.activeElementType) as T | undefined;
   }
 }
 
@@ -20,7 +40,7 @@ export function useStores(): RootStore {
 }
 
 export function useTaglineStore(): TaglineStore {
-  return useStores().taglineStore;
+  return useStores().elementStores.get('tagline') as TaglineStore;
 }
 
 export function usePanelStore(): PanelStore {
