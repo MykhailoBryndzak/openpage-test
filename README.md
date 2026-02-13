@@ -6,6 +6,7 @@ Interactive editor for a Tagline element in a no-code website builder.
 
 ## Features
 
+- **Extensible Architecture** — Add new customizable elements (Button, Input, etc.) without changing core code
 - **Preview Area** — Real-time preview of tagline with styled tags
 - **Settings Panel** — Manage tags and customize appearance
 - **Drag & Drop** — Reorder tags by dragging
@@ -50,6 +51,11 @@ npm run test:coverage
 
 ```
 src/
+├── core/                        # Extensibility infrastructure
+│   ├── types.ts                # ElementType, IElementDefinition
+│   ├── ElementRegistry.ts      # Panel component registry
+│   └── hooks.ts
+│
 ├── features/                    # Feature modules
 │   └── tagline/                 # Tagline feature
 │       ├── api/                 # API calls
@@ -58,17 +64,18 @@ src/
 │       │   ├── Panels/          # Settings panels
 │       │   │   ├── MainPanel/
 │       │   │   ├── ItemPanel/
-│       │   │   ├── StylesPanel/
-│       │   │   └── PanelContainer/
+│       │   │   └── StylesPanel/
 │       │   └── Preview/
 │       ├── stores/
 │       │   └── TaglineStore.ts
+│       ├── register.ts          # registerTaglineElement()
 │       ├── styles/
 │       │   └── TagStyleStrategy.ts
 │       ├── types/
 │       └── index.ts             # Public API (barrel)
 │
 ├── components/                  # Shared UI components
+│   ├── PanelContainer/          # Generic panel shell (registry-driven)
 │   ├── Tag/                     # Each component in folder
 │   │   ├── Tag.tsx
 │   │   ├── Tag.styles.ts
@@ -125,7 +132,24 @@ Each feature is self-contained with its own:
 3. **Repository Pattern** — API layer abstraction
 4. **Debouncing Pattern** — Optimized API call frequency
 
-### Adding a New Feature
+### Extensible Element Architecture
+
+The app is designed so you can **easily add new customizable components** (e.g. Button, Input) alongside Tagline. Each element gets its own preview, gear icon, and configuration panels — without changing core infrastructure.
+
+**To add a new element:**
+
+1. **Extend `ElementType`** in `src/core/types.ts` (e.g. add `'button'`)
+2. **Create the feature module** at `src/features/button/` with types, api, store, panels, and preview
+3. **Implement the store** — must satisfy `ElementStore` (items, styles, addItem, updateItem, etc.)
+4. **Create three panels** — MainPanel, ItemPanel, StylesPanel (each receives `store` via props)
+5. **Register** — `registerButtonElement()` calls `elementRegistry.register({ type: 'button', mainPanelComponent, itemPanelComponent, stylesPanelComponent })`
+6. **Wire into RootStore** — add the store to `elementStores` in the constructor
+7. **Create the preview** — 500×500 box with gear in top-right (visible on hover), `openPanel('button')` on click
+8. **Add to App** — call `registerButtonElement()` at load and render `ButtonPreview` in the layout
+
+No changes to `PanelContainer`, `PanelStore`, or `ElementRegistry` — the new element is purely additive.
+
+### Adding a New Feature (Generic)
 
 ```bash
 # Create feature structure
@@ -196,6 +220,8 @@ import { Tag } from '@components';
 |-------|------|
 | `@components` | `src/components` |
 | `@stores` | `src/stores` |
+| `@core` | `src/core` |
 | `@features/*` | `src/features/*` |
 | `@utils/*` | `src/utils/*` |
+| `@styles/*` | `src/styles` |
 | `@app/types/*` | `src/types/*` |
