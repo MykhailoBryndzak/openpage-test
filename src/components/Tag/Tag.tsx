@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { TagStyle, TagSize, TagRadius } from '@features/tagline';
+import type { TagStyle, TagSize, TagRadius } from '@features/tagline/types';
 import * as S from './Tag.styles';
 
 type TagProps = {

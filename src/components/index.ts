@@ -5,6 +5,8 @@ export type { ButtonVariant } from './Button';
 export { ButtonGroup } from './ButtonGroup';
 export { PanelHeader } from './PanelHeader';
 export { PanelContainer } from './PanelContainer';
+export { ElementPreviewWrapper } from './ElementPreviewWrapper';
+export { ErrorBoundary } from './ErrorBoundary';
 export {
   ChevronLeftIcon,
   XIcon,

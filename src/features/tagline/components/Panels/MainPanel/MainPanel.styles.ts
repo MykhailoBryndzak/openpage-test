@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { focusRing, resetButton, hoverHighlight } from '@styles/mixins';
-import { PanelContainer } from '../shared/PanelLayout.styles';
+import { PanelLayout } from '../shared/PanelLayout.styles';
 
-export const Container = PanelContainer;
+export const Container = PanelLayout;
 
 export const SaveErrorBanner = styled.div`
   padding: 8px 14px;

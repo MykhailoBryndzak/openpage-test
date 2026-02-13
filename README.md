@@ -53,8 +53,7 @@ npm run test:coverage
 src/
 ├── core/                        # Extensibility infrastructure
 │   ├── types.ts                # ElementType, IElementDefinition
-│   ├── ElementRegistry.ts      # Panel component registry
-│   └── hooks.ts
+│   └── ElementRegistry.ts      # Panel component registry
 │
 ├── features/                    # Feature modules
 │   └── tagline/                 # Tagline feature

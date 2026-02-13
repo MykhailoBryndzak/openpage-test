@@ -22,9 +22,7 @@ type ItemPanelProps = { store: TaglineStore; itemId?: string };
 
 export const ItemPanel = observer(function ItemPanel({ store: taglineStore, itemId }: ItemPanelProps) {
   const panelStore = usePanelStore();
-  const resolvedItemId = itemId ?? panelStore.current.itemId;
-
-  const existingItem = resolvedItemId ? taglineStore.getItem(resolvedItemId) : undefined;
+  const existingItem = itemId ? taglineStore.getItem(itemId) : undefined;
   const isEditing = Boolean(existingItem);
 
   const [label, setLabel] = useState(existingItem?.label ?? '');
@@ -60,11 +58,11 @@ export const ItemPanel = observer(function ItemPanel({ store: taglineStore, item
     panelStore.pop();
   }, [existingItem, isValid, label, link, taglineStore, panelStore]);
 
-  function handleAddItem() {
+  const handleAddItem = useCallback(() => {
     if (!isValid) return;
     taglineStore.addItem(label.trim(), link.trim() || 'https://');
     panelStore.pop();
-  }
+  }, [isValid, label, link, taglineStore, panelStore]);
 
   return (
     <S.Container role="form" aria-label={isEditing ? 'Edit tag' : 'Add new tag'}>

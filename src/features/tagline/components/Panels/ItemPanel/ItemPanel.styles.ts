@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { PanelContainer } from '../shared/PanelLayout.styles';
+import { PanelLayout } from '../shared/PanelLayout.styles';
 
-export const Container = PanelContainer;
+export const Container = PanelLayout;
 
 export const Content = styled.div`
   flex: 1;

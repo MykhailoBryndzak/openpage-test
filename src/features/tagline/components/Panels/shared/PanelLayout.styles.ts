@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const PanelContainer = styled.div`
+export const PanelLayout = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;

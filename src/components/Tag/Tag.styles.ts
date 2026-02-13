@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { focusRing } from '@styles/mixins';
-import type { TagStyle, TagSize } from '@features/tagline';
-import { tagStyleVariants, tagSizeVariants } from '@features/tagline';
+import type { TagStyle, TagSize } from '@features/tagline/types';
+import { tagStyleVariants, tagSizeVariants } from '@features/tagline/styles/TagStyleStrategy';
 
 export const TagButton = styled.button<{
   $tagStyle: TagStyle;
